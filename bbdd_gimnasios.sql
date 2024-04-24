@@ -1,5 +1,5 @@
 -- 1. Creación de BBDD
-CREATE DATABASE bbdd_gimnassios;
+CREATE DATABASE bbdd_gimnasios;
 
 -- 2.Conexión a la BBDD
 USE bbdd_gimnasios;
@@ -38,7 +38,7 @@ VALUES ('nombre1', 'apellido1', 111111111, 'cliente1@email.com'),
        ('nombre4', 'apellido4', 444444444, 'cliente4@email.com'),
        ('nombre5', 'apellido5', 555555555, 'cliente5@email.com');
 
--- 6. Inserción de datos tabla matrículas
+-- 7. Inserción de datos tabla matrículas
 
 INSERT INTO matriculas(monto, estado, cliente_id)
 VALUES (40000,TRUE,1),
@@ -63,11 +63,22 @@ INSERT INTO matriculas(monto, estado, cliente_id)
 VALUES  (30000,TRUE,1);
 
 --  Consulta clientes con más de 1 matricula
-SELECT monto, COUNT(monto) FROM matriculas GROUP BY monto HAVING COUNT(monto) >=2;
+SELECT monto, COUNT(monto) AS Cantidad_Matriculas
+FROM matriculas
+GROUP BY monto
+HAVING COUNT(monto) >=2;
 
--- 11. Consulta clientes con más de 1 matrícula, pero con sus datos
+-- 11. Consulta cantidad de matriculas de clientes con datos
 
-SELECT email, rut, m.monto, m.estado, COUNT(m.monto) FROM clientes
-INNER JOIN matriculas m on clientes.id = cliente_id GROUP BY email, rut, m.monto, m.estado;
+SELECT rut, email, SUM(m.monto) AS Suma_matriculas, m.estado, COUNT(m.monto) AS Cantidad_Matriculas
+FROM clientes c
+INNER JOIN matriculas m ON c.id = m.cliente_id
+GROUP BY rut, email, m.estado;
 
--- 12.
+-- 12. Consulta clientes con más de 1 matrícula, pero con sus datos
+
+SELECT rut, email, SUM(m.monto) AS Suma_matriculas, m.estado, COUNT(m.monto) AS Cantidad_Matriculas
+FROM clientes c
+INNER JOIN matriculas m ON c.id = m.cliente_id
+GROUP BY rut, email, m.estado
+HAVING COUNT(monto) >=2;
